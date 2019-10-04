@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUpActivity">
+
+    <TextView
+        android:id="@+id/text2"
+        android:text="회원 가입"
+        android:textSize="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/emailEdit"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <EditText
+        android:id="@+id/emailEdit"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="Email"
+        app:layout_constraintBottom_toTopOf="@id/passwordEdit"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text2"/>
+    <EditText
+        android:id="@+id/passwordEdit"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="Password"
+        app:layout_constraintBottom_toTopOf="@id/imgBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailEdit"/>
+
+    <ImageView
+        android:id="@+id/imgBtn"
+        android:src="@drawable/camera"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="40dp"
+        app:layout_constraintBottom_toTopOf="@id/locationText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordEdit" />
+
+    <EditText
+        android:id="@+id/RnameEdit"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:hint="가게 이름"
+        app:layout_constraintBottom_toTopOf="@id/categorySpinner"
+        app:layout_constraintLeft_toRightOf="@id/imgBtn"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordEdit"/>
+
+    <Spinner
+        android:id="@+id/categorySpinner"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toTopOf="@id/locationText"
+        app:layout_constraintHorizontal_bias="0.739"
+        app:layout_constraintLeft_toRightOf="@id/imgBtn"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/RnameEdit" />
+    <TextView
+        android:id="@+id/locationText"
+        android:text="위치"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/locationChangeBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categorySpinner"/>
+    <Button
+        android:id="@+id/locationChangeBtn"
+        android:text="위치 수정"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/menuBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/locationText"/>
+    <Button
+        android:id="@+id/menuBtn"
+        android:text="메뉴 등록하러 가기"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
