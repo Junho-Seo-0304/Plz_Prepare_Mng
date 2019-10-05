@@ -6,7 +6,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 data class Restaurant(
     var Rname : String?,
     var Rcategory : String?,
-    var RlocationX : Long?,
-    var RlocationY : Long?,
+    var RlocationX : Double?,
+    var RlocationY : Double?,
     var Rmenu : List<Menu>?
 )

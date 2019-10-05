@@ -28,8 +28,8 @@ class SignUpActivity : AppCompatActivity() {
     private val PERMISSION_CODE = 1001
     private val GET_LOCATION_CODE = 1002
     var category : String? = null
-    var LX : Long = 0
-    var LY : Long = 0
+    var LX : Double = 0.00
+    var LY : Double = 0.00
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,11 +45,10 @@ class SignUpActivity : AppCompatActivity() {
         var cSpinner = findViewById<Spinner>(R.id.categorySpinner)
         var logoBtn = findViewById<ImageView>(R.id.imgBtn)
         var LButton = findViewById<Button>(R.id.locationChangeBtn)
-        var finishButton =findViewById<Button>(R.id.finishBtn)
-        var email = emailEdit.text.toString()
-        user = email.toString()
-        var password = passwordEdit.text.toString()
-        var Rname = RnameEdit.text.toString()
+        var finishButton =findViewById<Button>(R.id.menuBtn)
+
+
+        locationText.text="위치는 " + LX.toString() +", " + LY.toString()
 
         logoBtn.setOnClickListener{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -73,8 +72,6 @@ class SignUpActivity : AppCompatActivity() {
 
         LButton.setOnClickListener{
             var intent = Intent(this,MapsActivity::class.java)
-            intent.putExtra("LX",LX)
-            intent.putExtra("LY",LY)
             startActivityForResult(intent,GET_LOCATION_CODE)
         }
 
@@ -90,18 +87,31 @@ class SignUpActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                category=categoryList[position]
+                setcategory(categoryList[position])
             }
         }
 
         finishButton.setOnClickListener{
-            val restaurant = Restaurant(Rname, category, LX, LY, null)
-            database!!.child("User").child(email).setValue(restaurant)
-            firebaseAuth!!.createUserWithEmailAndPassword(email,password)
-            var intent = Intent(this,SignUpMenuActivity::class.java)
-            intent.putExtra("User",email)
-            startActivity(intent)
+            var email = emailEdit.text.toString()
+            user = email
+            var password = passwordEdit.text.toString()
+            var Rname = RnameEdit.text.toString()
+            if(email.length<=0||password.length<=0||Rname.length<=0){
+                Toast.makeText(baseContext,"빈칸을 입력해주세요.",Toast.LENGTH_SHORT).show()
+            }
+            else {
+                val restaurant = Restaurant(Rname, category, LX, LY, null)
+                database.child("User").child(email).setValue(restaurant)
+                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                var intent = Intent(this, SignUpMenuActivity::class.java)
+                intent.putExtra("User", email)
+                startActivity(intent)
+            }
         }
+    }
+
+    fun setcategory(c : String){
+        category=c
     }
 
 
@@ -141,9 +151,9 @@ class SignUpActivity : AppCompatActivity() {
             uploadUri(data?.data)
             imgBtn.setImageURI(data?.data)
         }
-        if(requestCode==GET_LOCATION_CODE){
-            LX = data?.extras?.get("LX") as Long
-            LY = data?.extras?.get("LY") as Long
+        if(resultCode==GET_LOCATION_CODE){
+            LX = data?.extras?.get("LX") as Double
+            LY = data?.extras?.get("LY") as Double
         }
     }
 }

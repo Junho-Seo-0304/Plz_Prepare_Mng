@@ -1,18 +1,29 @@
 package com.example.plz_prepare_mng
 
+import android.content.Intent
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.ButtCap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+    var LX : Double = 0.00
+    var LY : Double = 0.00
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +32,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        var getLocationBtn = findViewById<Button>(R.id.getLocationBtn)
+        getLocationBtn.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
+            intent.putExtra("LX",LX)
+            intent.putExtra("LY",LY)
+            setResult(1002,intent)
+            finish()
+        }
     }
 
     /**
@@ -35,9 +54,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        mMap.setOnMapClickListener{
+            var mOptions = MarkerOptions()
+            mOptions.title("음식점 위치")
+            LX = it.latitude
+            LY = it.longitude
+            mOptions.snippet(LX.toString()+", "+LY.toString())
+            mOptions.position(LatLng(LX,LY))
+            googleMap.addMarker(mOptions)
+        }
     }
 }
