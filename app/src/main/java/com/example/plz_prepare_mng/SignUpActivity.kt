@@ -12,17 +12,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
+import com.google.firebase.firestore.auth.User
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var firebaseStorage:FirebaseStorage
     private lateinit var database: DatabaseReference
-    private lateinit var firebaseAuth: FirebaseAuth
 
-    var user : String? = null
     val categoryList = arrayOf("한식","중식","일식","양식","패스트푸드","카페")
     private val IMAGE_PICK_CODE = 1000
     private val PERMISSION_CODE = 1001
@@ -37,7 +36,6 @@ class SignUpActivity : AppCompatActivity() {
 
         firebaseStorage= FirebaseStorage.getInstance()
         database = FirebaseDatabase.getInstance().reference
-        firebaseAuth= FirebaseAuth.getInstance()
 
         var emailEdit = findViewById<EditText>(R.id.emailEdit)
         var passwordEdit = findViewById<EditText>(R.id.passwordEdit)
@@ -46,7 +44,6 @@ class SignUpActivity : AppCompatActivity() {
         var logoBtn = findViewById<ImageView>(R.id.imgBtn)
         var LButton = findViewById<Button>(R.id.locationChangeBtn)
         var finishButton =findViewById<Button>(R.id.menuBtn)
-
 
         locationText.text="위치는 " + LX.toString() +", " + LY.toString()
 
@@ -91,21 +88,38 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
+
         finishButton.setOnClickListener{
+
             var email = emailEdit.text.toString()
-            user = email
             var password = passwordEdit.text.toString()
             var Rname = RnameEdit.text.toString()
             if(email.length<=0||password.length<=0||Rname.length<=0){
                 Toast.makeText(baseContext,"빈칸을 입력해주세요.",Toast.LENGTH_SHORT).show()
             }
             else {
-                val restaurant = Restaurant(Rname, category, LX, LY, null)
-                database.child("User").child(email).setValue(restaurant)
-                firebaseAuth.createUserWithEmailAndPassword(email, password)
-                var intent = Intent(this, SignUpMenuActivity::class.java)
-                intent.putExtra("User", email)
-                startActivity(intent)
+                database.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        var child : Iterator<DataSnapshot> = p0.child("Users").children.iterator()
+                        while (child.hasNext()){
+                            if(child.next().key.equals(email)){
+                                Toast.makeText(baseContext,"중복된 아이디가 존재합니다.",Toast.LENGTH_SHORT).show()
+                                return
+                            }
+                        }
+                        val restaurant = Restaurant(Rname, category, LX, LY, null)
+                        database.child("Users").child(email).setValue(password)
+                        database.child("Users").child(email).child(password).setValue(restaurant)
+                        var intent = Intent(baseContext, SignUpMenuActivity::class.java)
+                        intent.putExtra("User", email)
+                        startActivity(intent)
+                    }
+                }
+                )
             }
         }
     }
@@ -117,7 +131,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun uploadUri(file: Uri?){
         if (file != null) {
-            firebaseStorage.reference.child(user.toString()).child("logo").putFile(file)
+            firebaseStorage.reference.child(idEdit.text.toString()).child("logo").putFile(file)
         }
     }
 

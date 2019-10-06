@@ -1,14 +1,19 @@
 package com.example.plz_prepare_mng
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
+import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
+import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -53,8 +58,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
+        initLocation()
+        var currentLocation = LatLng(LX,LY)
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
         mMap.setOnMapClickListener{
+            googleMap.clear()
             var mOptions = MarkerOptions()
             mOptions.title("음식점 위치")
             LX = it.latitude
@@ -63,5 +71,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mOptions.position(LatLng(LX,LY))
             googleMap.addMarker(mOptions)
         }
+    }
+    private fun initLocation(){
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return
+        }
+        var fusedLocationClient  = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener {
+                LX = it.latitude
+                LY = it.longitude
+            }
     }
 }
