@@ -61,6 +61,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         initLocation()
         var currentLocation = LatLng(LX,LY)
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,15.toFloat()))
         mMap.setOnMapClickListener{
             googleMap.clear()
             var mOptions = MarkerOptions()

@@ -26,6 +26,8 @@ class SignUpActivity : AppCompatActivity() {
     private val IMAGE_PICK_CODE = 1000
     private val PERMISSION_CODE = 1001
     private val GET_LOCATION_CODE = 1002
+    var user : String = "Unknown"
+    var imgUrl : Uri? = null
     var category : String? = null
     var LX : Double = 0.00
     var LY : Double = 0.00
@@ -114,6 +116,8 @@ class SignUpActivity : AppCompatActivity() {
                         val restaurant = Restaurant(Rname, category, LX, LY, null)
                         database.child("Users").child(email).setValue(password)
                         database.child("Users").child(email).child(password).setValue(restaurant)
+                        user = emailEdit.text.toString()
+                        uploadUri(imgUrl)
                         var intent = Intent(baseContext, SignUpMenuActivity::class.java)
                         intent.putExtra("User", email)
                         startActivity(intent)
@@ -131,7 +135,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun uploadUri(file: Uri?){
         if (file != null) {
-            firebaseStorage.reference.child(idEdit.text.toString()).child("logo").putFile(file)
+            firebaseStorage.reference.child(user).child("logo").putFile(file)
         }
     }
 
@@ -162,8 +166,8 @@ class SignUpActivity : AppCompatActivity() {
     @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            uploadUri(data?.data)
-            imgBtn.setImageURI(data?.data)
+            imgUrl = data?.data
+            imgBtn.setImageURI(imgUrl)
         }
         if(resultCode==GET_LOCATION_CODE){
             LX = data?.extras?.get("LX") as Double
