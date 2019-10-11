@@ -8,32 +8,15 @@
 
     <TextView
         android:id="@+id/text2"
-        android:text="회원 가입"
+        android:text="가게 등록"
         android:textSize="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/emailEdit"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-    <EditText
-        android:id="@+id/emailEdit"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:hint="Email"
-        app:layout_constraintBottom_toTopOf="@id/passwordEdit"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text2"/>
-    <EditText
-        android:id="@+id/passwordEdit"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:hint="Password"
         app:layout_constraintBottom_toTopOf="@id/imgBtn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailEdit"/>
+        app:layout_constraintTop_toTopOf="parent"/>
+
 
     <ImageView
         android:id="@+id/imgBtn"
@@ -43,7 +26,7 @@
         android:layout_marginLeft="40dp"
         app:layout_constraintBottom_toTopOf="@id/locationText"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordEdit" />
+        app:layout_constraintTop_toBottomOf="@id/text2" />
 
     <EditText
         android:id="@+id/RnameEdit"
@@ -53,7 +36,7 @@
         app:layout_constraintBottom_toTopOf="@id/categorySpinner"
         app:layout_constraintLeft_toRightOf="@id/imgBtn"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordEdit"/>
+        app:layout_constraintTop_toBottomOf="@id/text2"/>
 
     <Spinner
         android:id="@+id/categorySpinner"

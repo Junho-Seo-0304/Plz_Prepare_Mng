@@ -21,12 +21,13 @@ import kotlinx.android.synthetic.main.activity_sign_up.*
 class SignUpActivity : AppCompatActivity() {
     private lateinit var firebaseStorage:FirebaseStorage
     private lateinit var database: DatabaseReference
+    private lateinit var mAuth: FirebaseAuth
 
     val categoryList = arrayOf("한식","중식","일식","양식","패스트푸드","카페")
     private val IMAGE_PICK_CODE = 1000
     private val PERMISSION_CODE = 1001
     private val GET_LOCATION_CODE = 1002
-    var user : String = "Unknown"
+    val user by lazy { intent.extras!!["uid"] as String }
     var imgUrl : Uri? = null
     var category : String? = null
     var LX : Double = 0.00
@@ -38,9 +39,8 @@ class SignUpActivity : AppCompatActivity() {
 
         firebaseStorage= FirebaseStorage.getInstance()
         database = FirebaseDatabase.getInstance().reference
+        mAuth = FirebaseAuth.getInstance()
 
-        var emailEdit = findViewById<EditText>(R.id.emailEdit)
-        var passwordEdit = findViewById<EditText>(R.id.passwordEdit)
         var RnameEdit = findViewById<EditText>(R.id.RnameEdit)
         var cSpinner = findViewById<Spinner>(R.id.categorySpinner)
         var logoBtn = findViewById<ImageView>(R.id.imgBtn)
@@ -93,37 +93,18 @@ class SignUpActivity : AppCompatActivity() {
 
         finishButton.setOnClickListener{
 
-            var email = emailEdit.text.toString()
-            var password = passwordEdit.text.toString()
             var Rname = RnameEdit.text.toString()
-            if(email.length<=0||password.length<=0||Rname.length<=0){
+            if(Rname.length<=0||imgUrl==null){
                 Toast.makeText(baseContext,"빈칸을 입력해주세요.",Toast.LENGTH_SHORT).show()
             }
             else {
-                database.addListenerForSingleValueEvent(object : ValueEventListener{
-                    override fun onCancelled(p0: DatabaseError) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot) {
-                        var child : Iterator<DataSnapshot> = p0.child("Users").children.iterator()
-                        while (child.hasNext()){
-                            if(child.next().key.equals(email)){
-                                Toast.makeText(baseContext,"중복된 아이디가 존재합니다.",Toast.LENGTH_SHORT).show()
-                                return
-                            }
-                        }
                         val restaurant = Restaurant(Rname, category, LX, LY, null)
-                        database.child("Users").child(email).setValue(password)
-                        database.child("Users").child(email).child(password).setValue(restaurant)
-                        user = emailEdit.text.toString()
+                        database.child("Users").child(user).setValue(restaurant)
                         uploadUri(imgUrl)
                         var intent = Intent(baseContext, SignUpMenuActivity::class.java)
-                        intent.putExtra("User", email)
+                        intent.putExtra("User", user)
                         startActivity(intent)
-                    }
-                }
-                )
+                        finish()
             }
         }
     }

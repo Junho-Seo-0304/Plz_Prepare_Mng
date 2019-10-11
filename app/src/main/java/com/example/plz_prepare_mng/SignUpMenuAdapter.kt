@@ -1,26 +1,34 @@
 package com.example.plz_prepare_mng
 
 import android.content.Context
-import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.core.view.drawToBitmap
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Registry
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
+import com.firebase.ui.storage.images.FirebaseImageLoader
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.menu.view.*
+import java.io.InputStream
 
-class SignUpMenuAdapter (val context : Context, val foodslist : ArrayList<Menu>):BaseAdapter(){
+class SignUpMenuAdapter (val context : Context,val user : String, val menulist : ArrayList<Menu>):BaseAdapter(){
+
     private lateinit var firebaseStorage: FirebaseStorage
-
     override fun getCount(): Int {
-        return foodslist.size
+        return menulist.size
     }
 
     override fun getItem(position: Int): Any {
-        return foodslist[position]
+        return menulist[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -29,12 +37,14 @@ class SignUpMenuAdapter (val context : Context, val foodslist : ArrayList<Menu>)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?:LayoutInflater.from(context).inflate(R.layout.menu,parent,false) as View
-        view.imgFood.setImageURI(foodslist[position].imageUri)
-        view.findViewById<TextView>(R.id.menuName).text = foodslist[position].Fname
-        view.findViewById<TextView>(R.id.menuPrice).text = foodslist[position].Fprice.toString() + "원"
+        firebaseStorage = FirebaseStorage.getInstance("gs://plz-prepare.appspot.com")
+        var storageRef = firebaseStorage.getReference().child(user)
+        var imageRef = storageRef.child(menulist[position].Fname.toString()+".jpeg")
+        GlideApp.with(view.context).load(imageRef).into(view.findViewById(R.id.imgMenu))
+        view.findViewById<TextView>(R.id.menuName).text = menulist[position].Fname.toString()
+        view.findViewById<TextView>(R.id.menuPrice).text = menulist[position].Fprice.toString() + "원"
         view.findViewById<Button>(R.id.deleteBtn).setOnClickListener {
-            firebaseStorage= FirebaseStorage.getInstance()
-            foodslist.removeAt(position)
+            menulist.removeAt(position)
             this.notifyDataSetChanged()
         }
         return view

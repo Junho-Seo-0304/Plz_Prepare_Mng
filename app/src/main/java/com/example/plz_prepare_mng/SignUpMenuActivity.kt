@@ -1,17 +1,22 @@
 package com.example.plz_prepare_mng
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.GridView
+import android.widget.Toast
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.activity_sign_up_menu.*
 
 class SignUpMenuActivity : AppCompatActivity() {
 
     var menuList = ArrayList<Menu>()
+    val user by lazy { intent.extras!!["User"] as String }
     private lateinit var firebaseStorage: FirebaseStorage
     private lateinit var database: DatabaseReference
 
@@ -25,21 +30,32 @@ class SignUpMenuActivity : AppCompatActivity() {
         var menuGrid = findViewById<GridView>(R.id.menuGrid)
         var addMenuBtn = findViewById<Button>(R.id.addMenuBtn)
         var finishBtn = findViewById<Button>(R.id.finishBtn)
-        val adapter = SignUpMenuAdapter(this,menuList)
+        val adapter = SignUpMenuAdapter(this,user,menuList)
         menuGrid.adapter = adapter
-        menuGrid.setOnItemClickListener { parent, view, position, id ->
-            val foodintent = Intent(this,SignUpMenu2Activity::class.java)
-            foodintent.putExtra("Food",menuList[position])
-            startActivityForResult(foodintent,1)
-        }
         addMenuBtn.setOnClickListener {
             val menuintent = Intent(this,SignUpMenu2Activity::class.java)
-            menuintent.putExtra("MenuList",menuList)
-            startActivityForResult(menuintent,2)
+            menuintent.putExtra("User",user)
+            startActivityForResult(menuintent,1)
         }
 
         finishBtn.setOnClickListener {
+            database.child("Users").child(user).child("Menu").setValue(menuList)
+                .addOnSuccessListener {
+                    Toast.makeText(baseContext,"회원가입 완료!",Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this,MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+        }
+    }
 
+    @SuppressLint("MissingSuperCall")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (data != null && resultCode == 1) {
+            val newMenu = data.extras!!.get("NewMenu") as Menu
+            menuList.add(newMenu)
+            val adapter = SignUpMenuAdapter(this,user,menuList)
+            menuGrid.adapter = adapter
         }
     }
 }

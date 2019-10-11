@@ -5,24 +5,21 @@ import android.os.Parcel
 import android.os.Parcelable
 
 class Menu(
-    var imageUri: Uri?,
     var Fname: String?,
-    var Fprice: Int,
+    var Fprice: Int?,
     var Fexplain: String?
 ) : Parcelable {
     constructor(source: Parcel) : this(
-        source.readParcelable<Uri>(Uri::class.java.classLoader),
-        source.readString(),
-        source.readInt(),
-        source.readString()
+    source.readString(),
+    source.readValue(Int::class.java.classLoader) as Int?,
+    source.readString()
     )
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeParcelable(imageUri, 0)
         writeString(Fname)
-        writeInt(Fprice)
+        writeValue(Fprice)
         writeString(Fexplain)
     }
 

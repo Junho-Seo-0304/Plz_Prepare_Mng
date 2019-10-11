@@ -15,11 +15,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
+    private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         database = FirebaseDatabase.getInstance().reference
+        mAuth = FirebaseAuth.getInstance()
 
         var edit_Email = findViewById<EditText>(R.id.idEdit)
         var edit_Password = findViewById<EditText>(R.id.passwordEdit)
@@ -36,27 +38,27 @@ class MainActivity : AppCompatActivity() {
             }
         }
         signupBtn.setOnClickListener {
-            val intent = Intent(this,SignUpActivity::class.java)
+            val intent = Intent(this,SignUpEmailActivity::class.java)
             startActivityForResult(intent,1)
         }
     }
     private fun signIn(email: String, password: String) {
-           database.addListenerForSingleValueEvent(object : ValueEventListener{
-               override fun onCancelled(p0: DatabaseError) {
-                   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-               }
-
-               override fun onDataChange(p0: DataSnapshot) {
-                   var child : Iterator<DataSnapshot> = p0.child("Users").children.iterator()
-                   while (child.hasNext()){
-                       if(child.next().key.equals(idEdit.text.toString())
-                           &&child.next().child(idEdit.text.toString()).key.equals(passwordEdit.text.toString())){
-                           Toast.makeText(baseContext,"성공",Toast.LENGTH_SHORT).show()
+           mAuth.signInWithEmailAndPassword(email,password)
+               .addOnCompleteListener {
+                   if(it.isSuccessful){
+                       var currentUser = mAuth.currentUser
+                       if(currentUser!=null) {
+                           val intent = Intent(this, UserMainActivity::class.java)
+                           intent.putExtra("uid", currentUser.uid)
+                           startActivity(intent)
+                       }
+                       else{
+                           Toast.makeText(this,"아이디와 비밀번호를 확인해주세요.",Toast.LENGTH_SHORT).show()
                        }
                    }
+                   else{
+                       Toast.makeText(this,"아이디와 비밀번호를 확인해주세요.",Toast.LENGTH_SHORT).show()
+                   }
                }
-           }
-           )
-
     }
 }

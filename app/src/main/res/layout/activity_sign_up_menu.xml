@@ -9,6 +9,7 @@
         android:id="@+id/menuGrid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:numColumns="2"
         app:layout_constraintBottom_toTopOf="@id/addMenuBtn"
         app:layout_constraintTop_toTopOf="parent"/>
     <Button
