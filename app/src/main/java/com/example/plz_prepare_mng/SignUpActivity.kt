@@ -29,7 +29,7 @@ class SignUpActivity : AppCompatActivity() {
     private val GET_LOCATION_CODE = 1002
     val user by lazy { intent.extras!!["uid"] as String }
     var imgUrl : Uri? = null
-    var category : String? = null
+    var category : String = "Unknown"
     var LX : Double = 0.00
     var LY : Double = 0.00
 
@@ -98,11 +98,12 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(baseContext,"빈칸을 입력해주세요.",Toast.LENGTH_SHORT).show()
             }
             else {
-                        val restaurant = Restaurant(Rname, category, LX, LY, null)
-                        database.child("Users").child(user).setValue(restaurant)
+                        val restaurant = Restaurant(Rname, LX, LY, null)
+                        database.child("Users").child(category).child(user).setValue(restaurant)
                         uploadUri(imgUrl)
                         var intent = Intent(baseContext, SignUpMenuActivity::class.java)
                         intent.putExtra("User", user)
+                        intent.putExtra("Category",category)
                         startActivity(intent)
                         finish()
             }
@@ -153,6 +154,7 @@ class SignUpActivity : AppCompatActivity() {
         if(resultCode==GET_LOCATION_CODE){
             LX = data?.extras?.get("LX") as Double
             LY = data?.extras?.get("LY") as Double
+            locationText.text="위치는 " + LX.toString() +", " + LY.toString()
         }
     }
 }

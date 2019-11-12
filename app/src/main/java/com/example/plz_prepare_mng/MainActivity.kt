@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
                        var currentUser = mAuth.currentUser
                        if(currentUser!=null) {
                            val intent = Intent(this, UserMainActivity::class.java)
-                           intent.putExtra("uid", currentUser.uid)
                            startActivity(intent)
                        }
                        else{

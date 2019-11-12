@@ -1,24 +1,39 @@
 package com.example.plz_prepare_mng
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.permission_list.view.*
 
-class PermissionListAdapter(val context:Context) :BaseAdapter(){
+class PermissionListAdapter(val context:Context, var PermissionList : ArrayList<CustomerList>) :BaseAdapter(){
+
     override fun getCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return PermissionList.size
     }
 
     override fun getItem(position: Int): Any {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return PermissionList[position]
     }
 
     override fun getItemId(position: Int): Long {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return position.toLong()
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.permission_list,parent,false) as View
+        view.Number.text=PermissionList[position].Cnumber.toString()
+        view.OrderList.text=PermissionList[position].orderList
+        view.getReadyBtn.setOnClickListener {
+
+        }
+        view.rejectBtn.setOnClickListener {
+
+        }
+        return view
     }
 }

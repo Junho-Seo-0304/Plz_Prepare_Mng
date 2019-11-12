@@ -17,6 +17,7 @@ class SignUpMenuActivity : AppCompatActivity() {
 
     var menuList = ArrayList<Menu>()
     val user by lazy { intent.extras!!["User"] as String }
+    val category by lazy { intent.extras!!["Category"] as String }
     private lateinit var firebaseStorage: FirebaseStorage
     private lateinit var database: DatabaseReference
 
@@ -39,7 +40,7 @@ class SignUpMenuActivity : AppCompatActivity() {
         }
 
         finishBtn.setOnClickListener {
-            database.child("Users").child(user).child("Menu").setValue(menuList)
+            database.child("Users").child(category).child(user).child("Menu").setValue(menuList)
                 .addOnSuccessListener {
                     Toast.makeText(baseContext,"회원가입 완료!",Toast.LENGTH_SHORT).show()
                     val intent = Intent(this,MainActivity::class.java)
