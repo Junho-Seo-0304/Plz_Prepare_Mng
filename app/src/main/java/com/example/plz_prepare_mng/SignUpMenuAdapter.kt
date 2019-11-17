@@ -37,10 +37,8 @@ class SignUpMenuAdapter (val context : Context,val user : String, val menulist :
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?:LayoutInflater.from(context).inflate(R.layout.menu,parent,false) as View
-        firebaseStorage = FirebaseStorage.getInstance("gs://plz-prepare.appspot.com")
-        var storageRef = firebaseStorage.getReference().child(user)
-        var imageRef = storageRef.child(menulist[position].Fname.toString()+".jpeg")
-        GlideApp.with(view.context).load(imageRef).into(view.findViewById(R.id.imgMenu))
+        var storageRef = FirebaseStorage.getInstance().getReference(user+"/"+menulist[position].Fname.toString())
+        GlideApp.with(view).load(storageRef).into(view.findViewById(R.id.imgMenu))
         view.findViewById<TextView>(R.id.menuName).text = menulist[position].Fname.toString()
         view.findViewById<TextView>(R.id.menuPrice).text = menulist[position].Fprice.toString() + "원"
         view.findViewById<Button>(R.id.deleteBtn).setOnClickListener {

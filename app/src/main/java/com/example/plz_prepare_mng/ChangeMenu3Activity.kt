@@ -9,39 +9,50 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_sign_up_menu2.*
 
-class SignUpMenu2Activity : AppCompatActivity() {
+class ChangeMenu3Activity : AppCompatActivity() {
 
     val user by lazy { intent.extras!!["User"] as String }
+    val category by lazy { intent.extras!!["Category"] as String }
+    val menu by lazy { intent.extras!!["Menu"] as Menu }
     private lateinit var firebaseStorage: FirebaseStorage
-
+    private lateinit var database : DatabaseReference
     private val IMAGE_PICK_CODE = 1000
     private val PERMISSION_CODE = 1001
 
     var imgUrl : Uri? = null
+    var complete = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up_menu2)
+        setContentView(R.layout.activity_change_menu3)
         firebaseStorage= FirebaseStorage.getInstance()
+        database = FirebaseDatabase.getInstance().reference.child("Users").child(category).child(user)
         var imgFoodView = findViewById<ImageView>(R.id.imgFood)
         var FnameEdit = findViewById<EditText>(R.id.FnameEdit)
         var FpriceEdit = findViewById<EditText>(R.id.FpriceEdit)
         var FexplainEdit = findViewById<EditText>(R.id.FexplainEdit)
         var setMenuBtn = findViewById<Button>(R.id.setMenuBtn)
 
+        FnameEdit.setText(menu.Fname)
+        FpriceEdit.setText(menu.Fprice.toString())
+        FexplainEdit.setText(menu.Fexplain)
+        var storageRef = FirebaseStorage.getInstance().getReference(user+"/"+menu.Fname.toString())
+        GlideApp.with(this).load(storageRef).into(imgFoodView)
         imgFoodView.setOnClickListener{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
                     PackageManager.PERMISSION_DENIED){
                     //permission denied
-                    val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE);
+                    val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
                     //show popup to request runtime permission
                     requestPermissions(permissions, PERMISSION_CODE);
                 }
@@ -63,18 +74,30 @@ class SignUpMenu2Activity : AppCompatActivity() {
                     Integer.parseInt(FpriceEdit.text.toString()),
                     FexplainEdit.text.toString()
                 )
-                val menuListintent = Intent(this, SignUpMenuActivity::class.java)
-                menuListintent.putExtra("NewMenu", newMenu)
+                database.addValueEventListener(object : ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if(!complete) {
+                            var num = Integer.parseInt(p0.child("MenuNum").value.toString())
+                            database.child("Menu").child(num.toString()).setValue(newMenu)
+                            num++
+                            database.child("MenuNum").setValue(num)
+                            complete=true
+                        }
+                    }
+                })
                 uploadUri(imgUrl, newMenu.Fname.toString())
-                setResult(1, menuListintent)
                 finish()
-            } else{
+            } else {
                 Toast.makeText(baseContext,"빈칸을 채워주세요.",Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun uploadUri(file: Uri?,name : String){
+    private fun uploadUri(file: Uri?, name : String){
         if (file != null) {
             firebaseStorage.reference.child(user).child(name).putFile(file)
         }

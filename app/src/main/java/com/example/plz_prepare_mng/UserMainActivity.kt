@@ -1,15 +1,18 @@
 package com.example.plz_prepare_mng
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.ListView
+import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 
 class UserMainActivity : AppCompatActivity() {
 
-    private lateinit var firebaseStorage: FirebaseStorage
     private lateinit var database: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
 
@@ -22,10 +25,14 @@ class UserMainActivity : AppCompatActivity() {
         database = FirebaseDatabase.getInstance().reference.child("Users")
         mAuth = FirebaseAuth.getInstance()
 
+        var Rname = findViewById<TextView>(R.id.RnameText)
         var PListView = findViewById<ListView>(R.id.waitingPermissionList)
         var RListView = findViewById<ListView>(R.id.waitingReadyList)
+        var ChangeInfo = findViewById<ImageView>(R.id.changeRestInfo)
+        var ChangeMenu = findViewById<Button>(R.id.changeMenuBtn)
 
         searchCategory()
+
         database.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -33,6 +40,7 @@ class UserMainActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.child(category!!).hasChild(mAuth.currentUser!!.uid)){
+                    Rname.text=p0.child(category!!).child(mAuth.currentUser!!.uid).child("rname").value.toString()
                     PermissionList.clear()
                     ReadyList.clear()
                     for (i in 101 until Integer.parseInt(p0.child(category!!).child(mAuth.currentUser!!.uid).child("UsedNum").value.toString())){
@@ -45,21 +53,31 @@ class UserMainActivity : AppCompatActivity() {
                             PermissionList.add(CustomerList(num,totalString))
                         }
                     }
-                    PListView.adapter=PermissionListAdapter(baseContext,PermissionList)
+                    PListView.adapter=PermissionListAdapter(baseContext,PermissionList,category!!)
                     for (i in 101 until Integer.parseInt(p0.child(category!!).child(mAuth.currentUser!!.uid).child("UsedNum").value.toString())){
                         if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").hasChild(i.toString())){
                             val num = i
                             var totalString = ""
-                            for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").child(i.toString()).childrenCount) {
+                            for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").child(i.toString()).childrenCount-1) {
                                 totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").child(i.toString()).child((j - 1).toString()).child("food").child("fname").value.toString() + " : " +p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").child(i.toString()).child((j - 1).toString()).child("num").value.toString() + "\n"
                             }
                             ReadyList.add(CustomerList(num,totalString))
                         }
                     }
-                    RListView.adapter=ReadyListAdapter(baseContext,ReadyList)
+                    RListView.adapter=ReadyListAdapter(baseContext,ReadyList,category!!)
                 }
             }
         })
+        ChangeInfo.setOnClickListener {
+            val intent = Intent(this,ChangeInfoActivity::class.java)
+            intent.putExtra("Category",category)
+            startActivityForResult(intent,1)
+        }
+        ChangeMenu.setOnClickListener {
+            val intent = Intent(this,ChangeMenuActivity::class.java)
+            intent.putExtra("Category",category)
+            startActivityForResult(intent,2)
+        }
     }
 
     fun searchCategory(){
@@ -91,5 +109,15 @@ class UserMainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode==1&&resultCode==1&&data!=null){
+            searchCategory()
+        }
+        if (requestCode==1&&resultCode==2){
+            finish()
+        }
     }
 }

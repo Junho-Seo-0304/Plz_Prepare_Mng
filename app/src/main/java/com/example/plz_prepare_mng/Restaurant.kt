@@ -7,5 +7,6 @@ data class Restaurant(
     var Rname : String?,
     var RlocationX : Double?,
     var RlocationY : Double?,
+    var PhoneNum : String?,
     var Rmenu : List<Menu>?
 )

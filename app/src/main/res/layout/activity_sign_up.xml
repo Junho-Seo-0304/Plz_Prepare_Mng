@@ -42,11 +42,21 @@
         android:id="@+id/categorySpinner"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        app:layout_constraintBottom_toTopOf="@id/locationText"
+        app:layout_constraintBottom_toTopOf="@id/phoneEdit"
         app:layout_constraintHorizontal_bias="0.739"
         app:layout_constraintLeft_toRightOf="@id/imgBtn"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/RnameEdit" />
+    <EditText
+        android:id="@+id/phoneEdit"
+        android:hint="가게 전화 번호"
+        android:inputType="number"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/categorySpinner"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/locationText"/>
     <TextView
         android:id="@+id/locationText"
         android:text="위치"
@@ -56,7 +66,7 @@
         app:layout_constraintBottom_toTopOf="@id/locationChangeBtn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/categorySpinner"/>
+        app:layout_constraintTop_toBottomOf="@id/phoneEdit"/>
     <Button
         android:id="@+id/locationChangeBtn"
         android:text="위치 수정"

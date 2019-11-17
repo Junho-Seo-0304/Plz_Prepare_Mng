@@ -27,8 +27,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
-    var LX : Double = 0.00
-    var LY : Double = 0.00
+    var LX : Double = 37.600562
+    var LY : Double = 126.864789
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

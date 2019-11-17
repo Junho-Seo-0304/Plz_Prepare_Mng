@@ -40,6 +40,8 @@ class SignUpMenuActivity : AppCompatActivity() {
         }
 
         finishBtn.setOnClickListener {
+            database.child("Users").child(category).child(user).child("MenuNum").setValue(menuList.size)
+            database.child("Users").child(category).child(user).child("UsedNum").setValue(101)
             database.child("Users").child(category).child(user).child("Menu").setValue(menuList)
                 .addOnSuccessListener {
                     Toast.makeText(baseContext,"회원가입 완료!",Toast.LENGTH_SHORT).show()

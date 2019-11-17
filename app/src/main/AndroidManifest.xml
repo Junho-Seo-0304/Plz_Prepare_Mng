@@ -21,7 +21,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserMainActivity"></activity>
+        <activity android:name=".ChangeMenu3Activity"></activity>
+        <activity android:name=".ChangeMenu2Activity" />
+        <activity android:name=".ChangeMenuActivity" />
+        <activity android:name=".ChangeInfoActivity" />
+        <activity android:name=".RejectActivity" />
+        <activity android:name=".GetReadyActivity" />
+        <activity android:name=".UserMainActivity" />
         <activity android:name=".SignUpEmailActivity" />
         <activity
             android:name=".ui.login.SignUpEmailActivity"

@@ -46,8 +46,9 @@ class SignUpActivity : AppCompatActivity() {
         var logoBtn = findViewById<ImageView>(R.id.imgBtn)
         var LButton = findViewById<Button>(R.id.locationChangeBtn)
         var finishButton =findViewById<Button>(R.id.menuBtn)
+        var PnumEdit = findViewById<EditText>(R.id.phoneEdit)
 
-        locationText.text="위치는 " + LX.toString() +", " + LY.toString()
+        locationText.text="지도 위치 설정을 해주세요."
 
         logoBtn.setOnClickListener{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -93,12 +94,13 @@ class SignUpActivity : AppCompatActivity() {
 
         finishButton.setOnClickListener{
 
-            var Rname = RnameEdit.text.toString()
-            if(Rname.length<=0||imgUrl==null){
+            val Rname = RnameEdit.text.toString()
+            val Pnum = PnumEdit.text.toString()
+            if(Rname.isEmpty()||imgUrl==null||Pnum.isEmpty()||LX==0.00||LY==0.00){
                 Toast.makeText(baseContext,"빈칸을 입력해주세요.",Toast.LENGTH_SHORT).show()
             }
             else {
-                        val restaurant = Restaurant(Rname, LX, LY, null)
+                        val restaurant = Restaurant(Rname, LX, LY, Pnum,null)
                         database.child("Users").child(category).child(user).setValue(restaurant)
                         uploadUri(imgUrl)
                         var intent = Intent(baseContext, SignUpMenuActivity::class.java)

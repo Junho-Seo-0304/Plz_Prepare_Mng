@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         }
         signupBtn.setOnClickListener {
             val intent = Intent(this,SignUpEmailActivity::class.java)
-            startActivityForResult(intent,1)
+            startActivity(intent)
         }
     }
     private fun signIn(email: String, password: String) {
