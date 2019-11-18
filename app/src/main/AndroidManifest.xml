@@ -29,9 +29,6 @@
         <activity android:name=".GetReadyActivity" />
         <activity android:name=".UserMainActivity" />
         <activity android:name=".SignUpEmailActivity" />
-        <activity
-            android:name=".ui.login.SignUpEmailActivity"
-            android:label="@string/title_activity_sign_up_email" />
         <activity android:name=".SignUpMenu2Activity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

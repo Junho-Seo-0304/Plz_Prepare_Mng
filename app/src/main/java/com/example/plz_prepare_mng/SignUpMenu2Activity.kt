@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -67,7 +68,7 @@ class SignUpMenu2Activity : AppCompatActivity() {
                 menuListintent.putExtra("NewMenu", newMenu)
                 uploadUri(imgUrl, newMenu.Fname.toString())
                 setResult(1, menuListintent)
-                finish()
+                Handler().postDelayed({finish()},1000)
             } else{
                 Toast.makeText(baseContext,"빈칸을 채워주세요.",Toast.LENGTH_SHORT).show()
             }

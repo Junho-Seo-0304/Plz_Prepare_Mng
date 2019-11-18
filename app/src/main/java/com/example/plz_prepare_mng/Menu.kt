@@ -4,7 +4,7 @@ import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 
-class Menu(
+data class Menu(
     var Fname: String?,
     var Fprice: Int?,
     var Fexplain: String?

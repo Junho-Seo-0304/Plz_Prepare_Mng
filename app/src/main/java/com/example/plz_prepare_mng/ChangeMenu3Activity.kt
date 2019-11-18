@@ -23,6 +23,7 @@ class ChangeMenu3Activity : AppCompatActivity() {
     val user by lazy { intent.extras!!["User"] as String }
     val category by lazy { intent.extras!!["Category"] as String }
     val menu by lazy { intent.extras!!["Menu"] as Menu }
+    val num by lazy { intent.extras!!["Num"] as Int}
     private lateinit var firebaseStorage: FirebaseStorage
     private lateinit var database : DatabaseReference
     private val IMAGE_PICK_CODE = 1000
@@ -81,10 +82,7 @@ class ChangeMenu3Activity : AppCompatActivity() {
 
                     override fun onDataChange(p0: DataSnapshot) {
                         if(!complete) {
-                            var num = Integer.parseInt(p0.child("MenuNum").value.toString())
                             database.child("Menu").child(num.toString()).setValue(newMenu)
-                            num++
-                            database.child("MenuNum").setValue(num)
                             complete=true
                         }
                     }

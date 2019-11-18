@@ -114,7 +114,8 @@ class ChangeInfoActivity: AppCompatActivity() {
             database.child("Users").child(category).child(mAuth.currentUser!!.uid).removeValue()
             var storageRef = firebaseStorage.getReference(mAuth.currentUser!!.uid)
             storageRef.delete()
-            mAuth.currentUser!!.delete().addOnSuccessListener {
+            val cUser = mAuth.currentUser
+            cUser!!.delete().addOnSuccessListener {
                 Toast.makeText(baseContext,"회원이 탈퇴되었습니다.",Toast.LENGTH_SHORT).show()
             }
             val intent = Intent(this,UserMainActivity::class.java)

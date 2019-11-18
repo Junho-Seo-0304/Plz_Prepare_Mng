@@ -43,6 +43,7 @@ class ChangeMenuAdapter (val context : Context, val user : String, val category 
             intent.putExtra("Menu",menulist[position])
             intent.putExtra("Category",category)
             intent.putExtra("User",user)
+            intent.putExtra("Num",numlist[position])
             context.startActivity(intent)
         }
         view.findViewById<ImageView>(R.id.deleteBtn).setOnClickListener {
