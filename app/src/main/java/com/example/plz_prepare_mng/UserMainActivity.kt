@@ -43,7 +43,7 @@ class UserMainActivity : AppCompatActivity() {
                     Rname.text=p0.child(category!!).child(mAuth.currentUser!!.uid).child("rname").value.toString()
                     PermissionList.clear()
                     ReadyList.clear()
-                    for (i in 101 until Integer.parseInt(p0.child(category!!).child(mAuth.currentUser!!.uid).child("UsedNum").value.toString())){
+                    for (i in 101 .. Integer.parseInt(p0.child(category!!).child(mAuth.currentUser!!.uid).child("UsedNum").value.toString())){
                         if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").hasChild(i.toString())){
                             val num = i
                             var totalString = ""
@@ -54,7 +54,7 @@ class UserMainActivity : AppCompatActivity() {
                         }
                     }
                     PListView.adapter=PermissionListAdapter(baseContext,PermissionList,category!!)
-                    for (i in 101 until Integer.parseInt(p0.child(category!!).child(mAuth.currentUser!!.uid).child("UsedNum").value.toString())){
+                    for (i in 101 .. Integer.parseInt(p0.child(category!!).child(mAuth.currentUser!!.uid).child("UsedNum").value.toString())){
                         if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").hasChild(i.toString())){
                             val num = i
                             var totalString = ""

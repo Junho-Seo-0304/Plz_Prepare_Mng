@@ -42,7 +42,7 @@ class PermissionListAdapter(val context:Context, var PermissionList : ArrayList<
             notifyDataSetChanged()
         }
         view.rejectBtn.setOnClickListener {
-            val intent = Intent(context,RejectActivity::class.java)
+            val intent = Intent(context,RejectActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("Order",PermissionList[position])
             intent.putExtra("Category",category)
             context.startActivity(intent)

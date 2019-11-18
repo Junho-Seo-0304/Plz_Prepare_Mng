@@ -33,7 +33,7 @@ class RejectActivity : AppCompatActivity() {
                 override fun onDataChange(p0: DataSnapshot) {
                     if (!complete) {
                         val temp = p0.child("PermissionOrder").child(order.Cnumber.toString()).value
-                        val reason = reasonEdit.text
+                        val reason = reasonEdit.text.toString()
                         database.child("PermissionOrder").child(order.Cnumber.toString())
                             .removeValue()
                         database.child("RejectedOrder").child(order.Cnumber.toString()).setValue(temp)
