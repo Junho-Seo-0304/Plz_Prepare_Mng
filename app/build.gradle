@@ -11,7 +11,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.example.plz_prepare_mng"
-        minSdkVersion 18
+        minSdkVersion 23
         targetSdkVersion 29
         multiDexEnabled true
         versionCode 1
