@@ -19,7 +19,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback , LocationListener {
+class ChangeMapsActivity : AppCompatActivity(), OnMapReadyCallback , LocationListener {
 
     private lateinit var mMap: GoogleMap
     var LX : Double = 37.600562
@@ -36,7 +36,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback , LocationListener 
         mapFragment.getMapAsync(this)
         var getLocationBtn = findViewById<Button>(R.id.getLocationBtn)
         getLocationBtn.setOnClickListener {
-            val intent = Intent(this, SignUpActivity::class.java)
+            val intent = Intent(this, ChangeInfoActivity::class.java)
             intent.putExtra("LX",LX)
             intent.putExtra("LY",LY)
             setResult(1002,intent)

@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChangeMenu3Activity"></activity>
+        <activity android:name=".ChangeMapsActivity"></activity>
+        <activity android:name=".ChangeMenu3Activity" />
         <activity android:name=".ChangeMenu2Activity" />
         <activity android:name=".ChangeMenuActivity" />
         <activity android:name=".ChangeInfoActivity" />

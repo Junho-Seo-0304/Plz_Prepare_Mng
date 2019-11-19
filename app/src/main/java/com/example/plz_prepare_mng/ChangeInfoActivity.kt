@@ -72,7 +72,7 @@ class ChangeInfoActivity: AppCompatActivity() {
         }
 
         LButton.setOnClickListener{
-            var intent = Intent(this,MapsActivity::class.java)
+            var intent = Intent(this,ChangeMapsActivity::class.java)
             startActivityForResult(intent,GET_LOCATION_CODE)
         }
 
