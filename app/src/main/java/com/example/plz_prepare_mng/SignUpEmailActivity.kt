@@ -44,4 +44,12 @@ class SignUpEmailActivity : AppCompatActivity() {
                 }
             }
     }
+
+    override fun onBackPressed() {
+        var currentUser = mAuth.currentUser
+        if(currentUser != null) {
+            currentUser.delete()
+        }
+        super.onBackPressed()
+    }
 }

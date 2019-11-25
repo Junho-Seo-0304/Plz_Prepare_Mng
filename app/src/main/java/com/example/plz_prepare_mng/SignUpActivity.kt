@@ -159,4 +159,11 @@ class SignUpActivity : AppCompatActivity() {
             locationText.text="위치는 " + LX.toString() +", " + LY.toString()
         }
     }
+    override fun onBackPressed() {
+        var currentUser = mAuth.currentUser
+        if(currentUser != null) {
+            currentUser.delete()
+        }
+        super.onBackPressed()
+    }
 }

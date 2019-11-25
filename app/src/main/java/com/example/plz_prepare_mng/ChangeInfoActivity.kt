@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
@@ -103,11 +104,13 @@ class ChangeInfoActivity: AppCompatActivity() {
             else {
                 val restaurant = Restaurant(Rname, LX, LY, Pnum,null)
                 database.child("Users").child(newCategory!!).child(mAuth.currentUser!!.uid).setValue(restaurant)
+                database.child("Users").child(newCategory!!).child(mAuth.currentUser!!.uid).child("MenuNum").setValue(0)
+                database.child("Users").child(newCategory!!).child(mAuth.currentUser!!.uid).child("UsedNum").setValue(101)
                 database.child("Users").child(category).child(mAuth.currentUser!!.uid).removeValue()
                 uploadUri(imgUrl)
                 val intent = Intent(baseContext, UserMainActivity::class.java)
                 setResult(1,intent)
-                finish()
+                Handler().postDelayed({finish()},1000)
             }
         }
         DeleteButton.setOnClickListener {

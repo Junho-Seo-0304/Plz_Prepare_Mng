@@ -19,6 +19,7 @@ class UserMainActivity : AppCompatActivity() {
     var PermissionList = arrayListOf<CustomerList>()
     var ReadyList = arrayListOf<CustomerList>()
     var category : String? = null
+    var RestaurantChanged = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_main)
@@ -33,42 +34,78 @@ class UserMainActivity : AppCompatActivity() {
 
         searchCategory()
 
-        database.addValueEventListener(object : ValueEventListener{
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.child(category!!).hasChild(mAuth.currentUser!!.uid)){
-                    Rname.text=p0.child(category!!).child(mAuth.currentUser!!.uid).child("rname").value.toString()
-                    PermissionList.clear()
-                    ReadyList.clear()
-                    for (i in 101 .. Integer.parseInt(p0.child(category!!).child(mAuth.currentUser!!.uid).child("UsedNum").value.toString())){
-                        if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").hasChild(i.toString())){
-                            val num = i
-                            var totalString = ""
-                            for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").child(i.toString()).childrenCount) {
-                                totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").child(i.toString()).child((j - 1).toString()).child("food").child("fname").value.toString() + " : " +p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").child(i.toString()).child((j - 1).toString()).child("num").value.toString() + "\n"
-                            }
-                            PermissionList.add(CustomerList(num,totalString))
-                        }
-                    }
-                    PListView.adapter=PermissionListAdapter(baseContext,PermissionList,category!!)
-                    for (i in 101 .. Integer.parseInt(p0.child(category!!).child(mAuth.currentUser!!.uid).child("UsedNum").value.toString())){
-                        if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").hasChild(i.toString())){
-                            val num = i
-                            var totalString = ""
-                            for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").child(i.toString()).childrenCount-1) {
-                                totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").child(i.toString()).child((j - 1).toString()).child("food").child("fname").value.toString() + " : " +p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").child(i.toString()).child((j - 1).toString()).child("num").value.toString() + "\n"
-                            }
-                            ReadyList.add(CustomerList(num,totalString))
-                        }
-                    }
-                    RListView.adapter=ReadyListAdapter(baseContext,ReadyList,category!!)
+        if(!RestaurantChanged) {
+            database.addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
-            }
-        })
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.child(category!!).hasChild(mAuth.currentUser!!.uid)) {
+                        Rname.text =
+                            p0.child(category!!).child(mAuth.currentUser!!.uid).child("rname")
+                                .value.toString()
+                        PermissionList.clear()
+                        ReadyList.clear()
+                        for (i in 101..Integer.parseInt(
+                            p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                "UsedNum"
+                            ).value.toString()
+                        )) {
+                            if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").hasChild(
+                                    i.toString()
+                                )
+                            ) {
+                                val num = i
+                                var totalString = ""
+                                for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                    "PermissionOrder"
+                                ).child(i.toString()).childrenCount-1) {
+                                    totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                        "PermissionOrder"
+                                    ).child(i.toString()).child((j - 1).toString()).child("food").child(
+                                        "fname"
+                                    ).value.toString() + " : " + p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                        "PermissionOrder"
+                                    ).child(i.toString()).child((j - 1).toString()).child("num").value.toString() + "\n"
+                                }
+                                PermissionList.add(CustomerList(num, totalString))
+                            }
+                        }
+                        PListView.adapter =
+                            PermissionListAdapter(baseContext, PermissionList, category!!)
+                        for (i in 101..Integer.parseInt(
+                            p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                "UsedNum"
+                            ).value.toString()
+                        )) {
+                            if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").hasChild(
+                                    i.toString()
+                                )
+                            ) {
+                                val num = i
+                                var totalString = ""
+                                for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                    "ReadyOrder"
+                                ).child(i.toString()).childrenCount - 2) {
+                                    totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                        "ReadyOrder"
+                                    ).child(i.toString()).child((j - 1).toString()).child("food").child(
+                                        "fname"
+                                    ).value.toString() + " : " + p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                        "ReadyOrder"
+                                    ).child(i.toString()).child((j - 1).toString()).child("num").value.toString() + "\n"
+                                }
+                                ReadyList.add(CustomerList(num, totalString))
+                            }
+                        }
+                        RListView.adapter = ReadyListAdapter(baseContext, ReadyList, category!!)
+                    }
+                }
+            })
+        }
         ChangeInfo.setOnClickListener {
+            RestaurantChanged=true
             val intent = Intent(this,ChangeInfoActivity::class.java)
             intent.putExtra("Category",category)
             startActivityForResult(intent,1)
@@ -115,6 +152,8 @@ class UserMainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode==1&&resultCode==1&&data!=null){
             searchCategory()
+            RestaurantChanged=false
+            finish()
         }
         if (requestCode==1&&resultCode==2){
             finish()

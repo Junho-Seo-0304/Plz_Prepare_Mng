@@ -32,6 +32,14 @@ class GetReadyActivity : AppCompatActivity() {
         Mpicker.minValue = 0
         Mpicker.maxValue = 59
 
+        Hpicker.setOnValueChangedListener { picker, oldVal, newVal ->
+            hour=newVal
+        }
+
+        Mpicker.setOnValueChangedListener { picker, oldVal, newVal ->
+            minute=newVal
+        }
+
         RBtn.setOnClickListener {
             database.addValueEventListener(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
@@ -41,6 +49,7 @@ class GetReadyActivity : AppCompatActivity() {
                 override fun onDataChange(p0: DataSnapshot) {
                     if (!complete) {
                         val temp = p0.child("PermissionOrder").child(order.Cnumber.toString()).value
+                        val pushKey = p0.child("PermissionOrder").child(order.Cnumber.toString()).child("PushKey").value.toString()
                         database.child("PermissionOrder").child(order.Cnumber.toString())
                             .removeValue()
                         database.child("ReadyOrder").child(order.Cnumber.toString()).setValue(temp)
@@ -49,6 +58,9 @@ class GetReadyActivity : AppCompatActivity() {
                         database.child("ReadyOrder").child(order.Cnumber.toString()).child("Time")
                             .child("Minute").setValue(minute)
                         complete=true
+                        Thread{
+                            FCMPush(pushKey,hour,minute).pushFCMNotification()
+                        }.start()
                         finish()
                     }
                 }
