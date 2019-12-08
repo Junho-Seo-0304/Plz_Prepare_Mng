@@ -17,9 +17,9 @@ class SignUpEmailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up_email)
 
         mAuth = FirebaseAuth.getInstance()
-        var email = findViewById<EditText>(R.id.emailEdit)
-        var password = findViewById<EditText>(R.id.passwordEdit)
-        var setBtn = findViewById<Button>(R.id.button)
+        val email = findViewById<EditText>(R.id.emailEdit)
+        val password = findViewById<EditText>(R.id.passwordEdit)
+        val setBtn = findViewById<Button>(R.id.button)
 
         setBtn.setOnClickListener{
             signInEmail(email.text.toString(),password.text.toString())
@@ -30,10 +30,10 @@ class SignUpEmailActivity : AppCompatActivity() {
         mAuth.createUserWithEmailAndPassword(email,password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
-                    var currentUser = mAuth.currentUser
+                    val currentUser = mAuth.currentUser
                     if(currentUser != null) {
                         Toast.makeText(this, "이메일 회원가입 완료", Toast.LENGTH_SHORT).show()
-                        var intent = Intent(this, SignUpActivity::class.java)
+                        val intent = Intent(this, SignUpActivity::class.java)
                         intent.putExtra("uid", currentUser.uid)
                         startActivity(intent)
                         finish()
@@ -46,7 +46,7 @@ class SignUpEmailActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        var currentUser = mAuth.currentUser
+        val currentUser = mAuth.currentUser
         if(currentUser != null) {
             currentUser.delete()
         }

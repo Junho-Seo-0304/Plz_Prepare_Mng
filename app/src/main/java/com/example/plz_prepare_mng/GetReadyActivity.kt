@@ -6,7 +6,6 @@ import android.widget.Button
 import android.widget.NumberPicker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_get_ready.*
 
 class GetReadyActivity : AppCompatActivity() {
 
@@ -23,9 +22,9 @@ class GetReadyActivity : AppCompatActivity() {
         mAuth=FirebaseAuth.getInstance()
         database= FirebaseDatabase.getInstance().reference.child("Users").child(category).child(mAuth.currentUser!!.uid)
 
-        var Hpicker = findViewById<NumberPicker>(R.id.HourPicker)
-        var Mpicker = findViewById<NumberPicker>(R.id.MinPicker)
-        var RBtn = findViewById<Button>(R.id.readyBtn)
+        val Hpicker = findViewById<NumberPicker>(R.id.HourPicker)
+        val Mpicker = findViewById<NumberPicker>(R.id.MinPicker)
+        val RBtn = findViewById<Button>(R.id.readyBtn)
 
         Hpicker.minValue = 0
         Hpicker.maxValue = 23

@@ -9,7 +9,6 @@ import android.widget.BaseAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.permission_list.view.*
 
 class PermissionListAdapter(val context:Context, var PermissionList : ArrayList<CustomerList>, val category : String) :BaseAdapter(){

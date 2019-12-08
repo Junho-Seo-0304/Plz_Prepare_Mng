@@ -9,7 +9,7 @@ import android.widget.ListView
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.iid.FirebaseInstanceId
 
 class UserMainActivity : AppCompatActivity() {
 
@@ -26,83 +26,16 @@ class UserMainActivity : AppCompatActivity() {
         database = FirebaseDatabase.getInstance().reference.child("Users")
         mAuth = FirebaseAuth.getInstance()
 
-        var Rname = findViewById<TextView>(R.id.RnameText)
-        var PListView = findViewById<ListView>(R.id.waitingPermissionList)
-        var RListView = findViewById<ListView>(R.id.waitingReadyList)
-        var ChangeInfo = findViewById<ImageView>(R.id.changeRestInfo)
-        var ChangeMenu = findViewById<Button>(R.id.changeMenuBtn)
+        val Rname = findViewById<TextView>(R.id.RnameText)
+        val PListView = findViewById<ListView>(R.id.waitingPermissionList)
+        val RListView = findViewById<ListView>(R.id.waitingReadyList)
+        val ChangeInfo = findViewById<ImageView>(R.id.changeRestInfo)
+        val ChangeMenu = findViewById<Button>(R.id.changeMenuBtn)
 
         searchCategory()
 
         if(!RestaurantChanged) {
-            database.addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onDataChange(p0: DataSnapshot) {
-                    if (p0.child(category!!).hasChild(mAuth.currentUser!!.uid)) {
-                        Rname.text =
-                            p0.child(category!!).child(mAuth.currentUser!!.uid).child("rname")
-                                .value.toString()
-                        PermissionList.clear()
-                        ReadyList.clear()
-                        for (i in 101..Integer.parseInt(
-                            p0.child(category!!).child(mAuth.currentUser!!.uid).child(
-                                "UsedNum"
-                            ).value.toString()
-                        )) {
-                            if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").hasChild(
-                                    i.toString()
-                                )
-                            ) {
-                                val num = i
-                                var totalString = ""
-                                for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child(
-                                    "PermissionOrder"
-                                ).child(i.toString()).childrenCount-1) {
-                                    totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child(
-                                        "PermissionOrder"
-                                    ).child(i.toString()).child((j - 1).toString()).child("food").child(
-                                        "fname"
-                                    ).value.toString() + " : " + p0.child(category!!).child(mAuth.currentUser!!.uid).child(
-                                        "PermissionOrder"
-                                    ).child(i.toString()).child((j - 1).toString()).child("num").value.toString() + "\n"
-                                }
-                                PermissionList.add(CustomerList(num, totalString))
-                            }
-                        }
-                        PListView.adapter =
-                            PermissionListAdapter(baseContext, PermissionList, category!!)
-                        for (i in 101..Integer.parseInt(
-                            p0.child(category!!).child(mAuth.currentUser!!.uid).child(
-                                "UsedNum"
-                            ).value.toString()
-                        )) {
-                            if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").hasChild(
-                                    i.toString()
-                                )
-                            ) {
-                                val num = i
-                                var totalString = ""
-                                for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child(
-                                    "ReadyOrder"
-                                ).child(i.toString()).childrenCount - 2) {
-                                    totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child(
-                                        "ReadyOrder"
-                                    ).child(i.toString()).child((j - 1).toString()).child("food").child(
-                                        "fname"
-                                    ).value.toString() + " : " + p0.child(category!!).child(mAuth.currentUser!!.uid).child(
-                                        "ReadyOrder"
-                                    ).child(i.toString()).child((j - 1).toString()).child("num").value.toString() + "\n"
-                                }
-                                ReadyList.add(CustomerList(num, totalString))
-                            }
-                        }
-                        RListView.adapter = ReadyListAdapter(baseContext, ReadyList, category!!)
-                    }
-                }
-            })
+            getOrderList(Rname,PListView,RListView)
         }
         ChangeInfo.setOnClickListener {
             RestaurantChanged=true
@@ -117,12 +50,11 @@ class UserMainActivity : AppCompatActivity() {
         }
     }
 
-    fun searchCategory(){
+    private fun searchCategory(){
         database = FirebaseDatabase.getInstance().reference.child("Users")
         mAuth = FirebaseAuth.getInstance()
         database.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onDataChange(p0: DataSnapshot) {
@@ -143,6 +75,76 @@ class UserMainActivity : AppCompatActivity() {
                 }
                 if(p0.child("카페").hasChild(mAuth.currentUser!!.uid)){
                     category="카페"
+                }
+            }
+        })
+    }
+
+    private fun getOrderList(Rname : TextView, PListView : ListView, RListView : ListView){
+        database.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.child(category!!).hasChild(mAuth.currentUser!!.uid)) {
+                    Rname.text =
+                        p0.child(category!!).child(mAuth.currentUser!!.uid).child("rname")
+                            .value.toString()
+                    FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                        val newToken = it.token
+                        database.child(category!!).child(mAuth.currentUser!!.uid)
+                            .child("PushKey").setValue(newToken)
+                    }
+                    PermissionList.clear()
+                    ReadyList.clear()
+                    for (i in 101..Integer.parseInt(
+                        p0.child(category!!).child(mAuth.currentUser!!.uid).child("UsedNum").value.toString()
+                    )) {
+                        if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").hasChild(
+                                i.toString()
+                            )
+                        ) {
+                            val num = i
+                            var totalString = ""
+                            for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                "PermissionOrder"
+                            ).child(i.toString()).childrenCount-1) {
+                                totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                    "PermissionOrder"
+                                ).child(i.toString()).child((j - 1).toString()).child("food").child(
+                                    "fname"
+                                ).value.toString() + " : " + p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                    "PermissionOrder"
+                                ).child(i.toString()).child((j - 1).toString()).child("num").value.toString() + "\n"
+                            }
+                            PermissionList.add(CustomerList(num, totalString))
+                        }
+                    }
+                    PListView.adapter =
+                        PermissionListAdapter(baseContext, PermissionList, category!!)
+                    for (i in 101..Integer.parseInt(
+                        p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                            "UsedNum"
+                        ).value.toString()
+                    )) {
+                        if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").hasChild(
+                                i.toString()
+                            )
+                        ) {
+                            val num = i
+                            var totalString = ""
+                            for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").child(i.toString()).childrenCount - 2) {
+                                totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder"
+                                ).child(i.toString()).child((j - 1).toString()).child("food").child(
+                                    "fname"
+                                ).value.toString() + " : " + p0.child(category!!).child(mAuth.currentUser!!.uid).child(
+                                    "ReadyOrder"
+                                ).child(i.toString()).child((j - 1).toString()).child("num").value.toString() + "\n"
+                            }
+                            ReadyList.add(CustomerList(num, totalString))
+                        }
+                    }
+                    RListView.adapter = ReadyListAdapter(baseContext, ReadyList, category!!)
                 }
             }
         })

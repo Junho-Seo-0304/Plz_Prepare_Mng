@@ -1,8 +1,6 @@
 package com.example.plz_prepare_mng
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -28,9 +26,9 @@ class SignUpMenuActivity : AppCompatActivity() {
         firebaseStorage= FirebaseStorage.getInstance()
         database = FirebaseDatabase.getInstance().reference
 
-        var menuGrid = findViewById<GridView>(R.id.menuGrid)
-        var addMenuBtn = findViewById<Button>(R.id.addMenuBtn)
-        var finishBtn = findViewById<Button>(R.id.finishBtn)
+        val menuGrid = findViewById<GridView>(R.id.menuGrid)
+        val addMenuBtn = findViewById<Button>(R.id.addMenuBtn)
+        val finishBtn = findViewById<Button>(R.id.finishBtn)
         val adapter = SignUpMenuAdapter(this,user,menuList)
         menuGrid.adapter = adapter
         addMenuBtn.setOnClickListener {
@@ -52,8 +50,8 @@ class SignUpMenuActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (data != null && resultCode == 1) {
             val newMenu = data.extras!!.get("NewMenu") as Menu
             menuList.add(newMenu)

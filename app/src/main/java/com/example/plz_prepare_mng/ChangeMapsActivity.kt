@@ -15,7 +15,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -30,11 +29,9 @@ class ChangeMapsActivity : AppCompatActivity(), OnMapReadyCallback , LocationLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_maps)
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        var getLocationBtn = findViewById<Button>(R.id.getLocationBtn)
+        val getLocationBtn = findViewById<Button>(R.id.getLocationBtn)
         getLocationBtn.setOnClickListener {
             val intent = Intent(this, ChangeInfoActivity::class.java)
             intent.putExtra("LX",LX)
@@ -55,7 +52,7 @@ class ChangeMapsActivity : AppCompatActivity(), OnMapReadyCallback , LocationLis
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        var currentLocation = LatLng(LX,LY)
+        val currentLocation = LatLng(LX,LY)
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,15.toFloat()))
         if(ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED) {
@@ -65,14 +62,12 @@ class ChangeMapsActivity : AppCompatActivity(), OnMapReadyCallback , LocationLis
 
             }else {
                 requestPermissions(
-                    Array<String>(1) { android.Manifest.permission.ACCESS_FINE_LOCATION },
-                    1
-                )
+                    Array(1) { android.Manifest.permission.ACCESS_FINE_LOCATION }, 1)
             }
         }
         mMap.setOnMapClickListener{
             googleMap.clear()
-            var mOptions = MarkerOptions()
+            val mOptions = MarkerOptions()
             mOptions.title("음식점 위치")
             LX = it.latitude
             LY = it.longitude

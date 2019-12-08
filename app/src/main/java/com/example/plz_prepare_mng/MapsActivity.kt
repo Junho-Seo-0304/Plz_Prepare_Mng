@@ -15,7 +15,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -34,7 +33,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback , LocationListener 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        var getLocationBtn = findViewById<Button>(R.id.getLocationBtn)
+        val getLocationBtn = findViewById<Button>(R.id.getLocationBtn)
         getLocationBtn.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             intent.putExtra("LX",LX)
@@ -55,7 +54,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback , LocationListener 
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        var currentLocation = LatLng(LX,LY)
+        val currentLocation = LatLng(LX,LY)
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,15.toFloat()))
         if(ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED) {
@@ -65,14 +64,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback , LocationListener 
 
             }else {
                 requestPermissions(
-                    Array<String>(1) { android.Manifest.permission.ACCESS_FINE_LOCATION },
-                    1
-                )
+                    Array(1) { android.Manifest.permission.ACCESS_FINE_LOCATION }, 1)
             }
         }
         mMap.setOnMapClickListener{
             googleMap.clear()
-            var mOptions = MarkerOptions()
+            val mOptions = MarkerOptions()
             mOptions.title("음식점 위치")
             LX = it.latitude
             LY = it.longitude
@@ -86,7 +83,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback , LocationListener 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode==1){
-            if (grantResults.size>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+            if (grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
                 if(ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED) {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10.0f, this)
                 }

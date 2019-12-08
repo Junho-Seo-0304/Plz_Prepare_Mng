@@ -21,8 +21,8 @@ class RejectActivity : AppCompatActivity() {
         mAuth=FirebaseAuth.getInstance()
         database= FirebaseDatabase.getInstance().reference.child("Users").child(category).child(mAuth.currentUser!!.uid)
 
-        var reasonEdit = findViewById<EditText>(R.id.reasonEdit)
-        var rejectBtn = findViewById<Button>(R.id.rejectBtn)
+        val reasonEdit = findViewById<EditText>(R.id.reasonEdit)
+        val rejectBtn = findViewById<Button>(R.id.rejectBtn)
 
         rejectBtn.setOnClickListener {
             database.addValueEventListener(object : ValueEventListener{
@@ -34,11 +34,15 @@ class RejectActivity : AppCompatActivity() {
                     if (!complete) {
                         val temp = p0.child("PermissionOrder").child(order.Cnumber.toString()).value
                         val reason = reasonEdit.text.toString()
+                        val pushKey = p0.child("PermissionOrder").child(order.Cnumber.toString()).child("PushKey").value.toString()
                         database.child("PermissionOrder").child(order.Cnumber.toString())
                             .removeValue()
                         database.child("RejectedOrder").child(order.Cnumber.toString()).setValue(temp)
                         database.child("RejectedOrder").child(order.Cnumber.toString()).child("Reason").setValue(reason)
                         complete=true
+                        Thread{
+                            FCMRejectPush(pushKey).pushFCMNotification()
+                        }.start()
                         finish()
                     }
                 }

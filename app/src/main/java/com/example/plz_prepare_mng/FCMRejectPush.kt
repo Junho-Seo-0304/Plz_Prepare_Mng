@@ -5,7 +5,7 @@ import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 
-class FCMPush(val pushToken : String,val hour : Int, val minute : Int){
+class FCMRejectPush(val pushToken : String){
     val AUTH_Key_FCM = "AAAAlWmg7E8:APA91bG4r6BSyzyWT1js5WWD8r50l2FMQjIlO7aADqsCH95ycSaAgyN2xFHfmGVuAZ517tyEbrmbwuk3ImOz9jOP_pZ300xmnSbdI9EoCmF72xyNA0Z_Nrhc5UyTUEndFXcc_GtoIPZV"
     val URL_FCM = "https://fcm.googleapis.com/fcm/send"
 
@@ -24,7 +24,7 @@ class FCMPush(val pushToken : String,val hour : Int, val minute : Int){
         val json = JsonObject()
         val info = JsonObject()
 
-        val msgBody : String = "주문이 수락되었습니다. "+hour.toString()+"시 "+minute.toString()+"분까지 매장 방문해주세요."
+        val msgBody  = "주문이 거절되었습니다. 거절 이유를 확인해보세요."
         info.addProperty("title","알림")
         info.addProperty("body",msgBody)
         info.addProperty("sound","default")
@@ -48,7 +48,7 @@ class FCMPush(val pushToken : String,val hour : Int, val minute : Int){
         }
     }
     private fun connFinish(){
-            wr.close()
-            conn.disconnect()
+        wr.close()
+        conn.disconnect()
     }
 }

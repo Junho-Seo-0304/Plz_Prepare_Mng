@@ -32,7 +32,7 @@ class ChangeMenuAdapter (val context : Context, val user : String, val category 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.change_menu,parent,false) as View
-        var storageRef = FirebaseStorage.getInstance().getReference(user+"/"+menulist[position].Fname.toString())
+        val storageRef = FirebaseStorage.getInstance().getReference(user+"/"+menulist[position].Fname.toString())
         GlideApp.with(view).load(storageRef).into(view.findViewById(R.id.imgFood))
         database = FirebaseDatabase.getInstance().reference.child("Users").child(category).child(user).child("Menu").child(numlist[position].toString())
         mAuth = FirebaseAuth.getInstance()

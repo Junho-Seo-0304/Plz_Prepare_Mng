@@ -3,13 +3,10 @@ package com.example.plz_prepare_mng
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -23,14 +20,14 @@ class MainActivity : AppCompatActivity() {
         database = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
 
-        var edit_Email = findViewById<EditText>(R.id.idEdit)
-        var edit_Password = findViewById<EditText>(R.id.passwordEdit)
-        var signinBtn = findViewById<Button>(R.id.signinButton)
-        var signupBtn = findViewById<Button>(R.id.signupButton)
+        val edit_Email = findViewById<EditText>(R.id.idEdit)
+        val edit_Password = findViewById<EditText>(R.id.passwordEdit)
+        val signinBtn = findViewById<Button>(R.id.signinButton)
+        val signupBtn = findViewById<Button>(R.id.signupButton)
 
         signinBtn.setOnClickListener{
-            var getEmail = edit_Email.text.toString()
-            var getPassword = edit_Password.text.toString()
+            val getEmail = edit_Email.text.toString()
+            val getPassword = edit_Password.text.toString()
             if(getEmail.length<=0||getPassword.length<=0){
                 Toast.makeText(baseContext,"이메일과 비밀번호를 입력해주세요.",Toast.LENGTH_SHORT).show()
             } else {
@@ -46,7 +43,7 @@ class MainActivity : AppCompatActivity() {
            mAuth.signInWithEmailAndPassword(email,password)
                .addOnCompleteListener {
                    if(it.isSuccessful){
-                       var currentUser = mAuth.currentUser
+                       val currentUser = mAuth.currentUser
                        if(currentUser!=null) {
                            val intent = Intent(this, UserMainActivity::class.java)
                            startActivity(intent)

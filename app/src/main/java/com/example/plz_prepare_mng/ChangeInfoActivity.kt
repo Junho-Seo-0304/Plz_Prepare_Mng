@@ -1,12 +1,10 @@
 package com.example.plz_prepare_mng
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -14,9 +12,7 @@ import android.view.View
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.firestore.auth.User
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class ChangeInfoActivity: AppCompatActivity() {
@@ -42,38 +38,28 @@ class ChangeInfoActivity: AppCompatActivity() {
         database = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
 
-        var RnameEdit = findViewById<EditText>(R.id.RnameEdit)
-        var cSpinner = findViewById<Spinner>(R.id.categorySpinner)
-        var logoBtn = findViewById<ImageView>(R.id.imgBtn)
-        var LButton = findViewById<Button>(R.id.locationChangeBtn)
-        var ChangeInfoButton =findViewById<Button>(R.id.ChangeInfoBtn)
-        var DeleteButton = findViewById<Button>(R.id.DeleteRestBtn)
-        var PnumEdit = findViewById<EditText>(R.id.phoneEdit)
+        val RnameEdit = findViewById<EditText>(R.id.RnameEdit)
+        val cSpinner = findViewById<Spinner>(R.id.categorySpinner)
+        val logoBtn = findViewById<ImageView>(R.id.imgBtn)
+        val LButton = findViewById<Button>(R.id.locationChangeBtn)
+        val ChangeInfoButton =findViewById<Button>(R.id.ChangeInfoBtn)
+        val DeleteButton = findViewById<Button>(R.id.DeleteRestBtn)
+        val PnumEdit = findViewById<EditText>(R.id.phoneEdit)
 
         locationText.text="지도 위치 설정을 해주세요."
 
         logoBtn.setOnClickListener{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_DENIED){
-                    //permission denied
-                    val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE);
-                    //show popup to request runtime permission
-                    requestPermissions(permissions, PERMISSION_CODE);
-                }
-                else{
-                    //permission already granted
-                    pickImageFromGallery();
-                }
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                requestPermissions(permissions, PERMISSION_CODE)
             }
             else{
-                //system OS is < Marshmallow
                 pickImageFromGallery()
             }
         }
 
         LButton.setOnClickListener{
-            var intent = Intent(this,ChangeMapsActivity::class.java)
+            val intent = Intent(this,ChangeMapsActivity::class.java)
             startActivityForResult(intent,GET_LOCATION_CODE)
         }
 
@@ -115,7 +101,7 @@ class ChangeInfoActivity: AppCompatActivity() {
         }
         DeleteButton.setOnClickListener {
             database.child("Users").child(category).child(mAuth.currentUser!!.uid).removeValue()
-            var storageRef = firebaseStorage.getReference(mAuth.currentUser!!.uid)
+            val storageRef = firebaseStorage.getReference(mAuth.currentUser!!.uid)
             storageRef.delete()
             val cUser = mAuth.currentUser
             cUser!!.delete().addOnSuccessListener {
@@ -139,7 +125,6 @@ class ChangeInfoActivity: AppCompatActivity() {
     }
 
     private fun pickImageFromGallery() {
-        //Intent to pick image
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, IMAGE_PICK_CODE)
@@ -150,28 +135,31 @@ class ChangeInfoActivity: AppCompatActivity() {
             PERMISSION_CODE -> {
                 if (grantResults.size >0 && grantResults[0] ==
                     PackageManager.PERMISSION_GRANTED){
-                    //permission from popup granted
                     pickImageFromGallery()
                 }
                 else{
-                    //permission from popup denied
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    //handle result of picked image
-    @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
             imgUrl = data?.data
             imgBtn.setImageURI(imgUrl)
         }
         if(resultCode==GET_LOCATION_CODE){
             LX = data?.extras?.get("LX") as Double
-            LY = data?.extras?.get("LY") as Double
+            LY = data.extras?.get("LY") as Double
             locationText.text="위치는 " + LX.toString() +", " + LY.toString()
         }
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(baseContext, UserMainActivity::class.java)
+        setResult(1,intent)
+        super.onBackPressed()
     }
 }

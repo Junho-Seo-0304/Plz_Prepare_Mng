@@ -1,7 +1,6 @@
 package com.example.plz_prepare_mng
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -35,28 +33,18 @@ class ChangeMenu2Activity : AppCompatActivity() {
         setContentView(R.layout.activity_change_menu2)
         firebaseStorage= FirebaseStorage.getInstance()
         database = FirebaseDatabase.getInstance().reference.child("Users").child(category).child(user)
-        var imgFoodView = findViewById<ImageView>(R.id.imgFood)
-        var FnameEdit = findViewById<EditText>(R.id.FnameEdit)
-        var FpriceEdit = findViewById<EditText>(R.id.FpriceEdit)
-        var FexplainEdit = findViewById<EditText>(R.id.FexplainEdit)
-        var setMenuBtn = findViewById<Button>(R.id.setMenuBtn)
+        val imgFoodView = findViewById<ImageView>(R.id.imgFood)
+        val FnameEdit = findViewById<EditText>(R.id.FnameEdit)
+        val FpriceEdit = findViewById<EditText>(R.id.FpriceEdit)
+        val FexplainEdit = findViewById<EditText>(R.id.FexplainEdit)
+        val setMenuBtn = findViewById<Button>(R.id.setMenuBtn)
 
         imgFoodView.setOnClickListener{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_DENIED){
-                    //permission denied
-                    val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE);
-                    //show popup to request runtime permission
-                    requestPermissions(permissions, PERMISSION_CODE);
-                }
-                else{
-                    //permission already granted
-                    pickImageFromGallery();
-                }
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                requestPermissions(permissions, PERMISSION_CODE)
             }
             else{
-                //system OS is < Marshmallow
                 pickImageFromGallery()
             }
         }
@@ -98,7 +86,6 @@ class ChangeMenu2Activity : AppCompatActivity() {
     }
 
     private fun pickImageFromGallery() {
-        //Intent to pick image
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, IMAGE_PICK_CODE)
@@ -107,21 +94,19 @@ class ChangeMenu2Activity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode){
             PERMISSION_CODE -> {
-                if (grantResults.size >0 && grantResults[0] ==
+                if (grantResults.isNotEmpty() && grantResults[0] ==
                     PackageManager.PERMISSION_GRANTED){
-                    //permission from popup granted
                     pickImageFromGallery()
                 }
                 else{
-                    //permission from popup denied
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             imgUrl = data?.data
             imgFood.setImageURI(imgUrl)
