@@ -40,9 +40,9 @@ class GetReadyActivity : AppCompatActivity() {
         }
 
         RBtn.setOnClickListener {
+            // 시간을 정하고 주문 수락 버튼을 누르면 Firebase에서 PermissionOrder에 있던 주문이 ReadyOrder로 바뀐다.
             database.addValueEventListener(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {

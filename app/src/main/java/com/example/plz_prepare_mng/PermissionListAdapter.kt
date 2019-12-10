@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.permission_list.view.*
 
 class PermissionListAdapter(val context:Context, var PermissionList : ArrayList<CustomerList>, val category : String) :BaseAdapter(){
+    // UserMainActivity에서 수락을 받아야하는 주문들을 리스트뷰에 연결하는 어뎁터
     private lateinit var database: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
 
@@ -34,6 +35,7 @@ class PermissionListAdapter(val context:Context, var PermissionList : ArrayList<
         view.Number.text=PermissionList[position].Cnumber.toString()
         view.OrderList.text=PermissionList[position].orderList
         view.getReadyBtn.setOnClickListener {
+            // 리스트 뷰 안에 수락 버튼
             val intent = Intent(context,GetReadyActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("Order",PermissionList[position])
             intent.putExtra("Category",category)
@@ -41,6 +43,7 @@ class PermissionListAdapter(val context:Context, var PermissionList : ArrayList<
             notifyDataSetChanged()
         }
         view.rejectBtn.setOnClickListener {
+            // 리스트 뷰 안에 거절 버튼
             val intent = Intent(context,RejectActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("Order",PermissionList[position])
             intent.putExtra("Category",category)

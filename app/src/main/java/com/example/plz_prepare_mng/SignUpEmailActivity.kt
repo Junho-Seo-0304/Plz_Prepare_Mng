@@ -22,13 +22,14 @@ class SignUpEmailActivity : AppCompatActivity() {
         val setBtn = findViewById<Button>(R.id.button)
 
         setBtn.setOnClickListener{
-            signInEmail(email.text.toString(),password.text.toString())
+            signupEmail(email.text.toString(),password.text.toString())
         }
     }
 
-    private fun signInEmail(email:String, password:String){
+    private fun signupEmail(email:String, password:String){ // 이메일로 회원가입을 하는 함수
         mAuth.createUserWithEmailAndPassword(email,password)
             .addOnCompleteListener {
+                // Firebase Auth의 createUserWithEmailAndPassword를 이용해 이메일과 비밀번호로 회원가입
                 if (it.isSuccessful) {
                     val currentUser = mAuth.currentUser
                     if(currentUser != null) {
@@ -46,6 +47,7 @@ class SignUpEmailActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        // 회원가입 도중 뒤로가기를 누르면 현재까지 생성된 정보를 삭제한다.
         val currentUser = mAuth.currentUser
         if(currentUser != null) {
             currentUser.delete()

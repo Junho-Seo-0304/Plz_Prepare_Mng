@@ -1,8 +1,6 @@
 package com.example.plz_prepare_mng
 
-import com.google.firebase.database.IgnoreExtraProperties
-
-@IgnoreExtraProperties
+// 레스토랑이름, 위치, 핸드폰번호 그리고 메뉴를 가지고 있는 class, Firebase realtime database에 넣기 위해 data class로 선언
 data class Restaurant(
     var Rname : String?,
     var RlocationX : Double?,

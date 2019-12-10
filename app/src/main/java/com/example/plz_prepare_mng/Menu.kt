@@ -3,6 +3,7 @@ package com.example.plz_prepare_mng
 import android.os.Parcel
 import android.os.Parcelable
 
+// 메뉴의 정보를 가지고 있는 class, Firebase realtime database에 넣기 위해 data class로 선언
 data class Menu(
     var Fname: String?,
     var Fprice: Int?,

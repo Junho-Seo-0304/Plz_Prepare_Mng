@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         val signupBtn = findViewById<Button>(R.id.signupButton)
 
         signinBtn.setOnClickListener{
+            // sign in 버튼
             val getEmail = edit_Email.text.toString()
             val getPassword = edit_Password.text.toString()
             if(getEmail.length<=0||getPassword.length<=0){
@@ -35,26 +36,28 @@ class MainActivity : AppCompatActivity() {
             }
         }
         signupBtn.setOnClickListener {
+            // sign up 버튼
             val intent = Intent(this,SignUpEmailActivity::class.java)
             startActivity(intent)
         }
     }
     private fun signIn(email: String, password: String) {
-           mAuth.signInWithEmailAndPassword(email,password)
-               .addOnCompleteListener {
-                   if(it.isSuccessful){
-                       val currentUser = mAuth.currentUser
-                       if(currentUser!=null) {
-                           val intent = Intent(this, UserMainActivity::class.java)
-                           startActivity(intent)
-                       }
-                       else{
-                           Toast.makeText(this,"아이디와 비밀번호를 확인해주세요.",Toast.LENGTH_SHORT).show()
-                       }
-                   }
-                   else{
-                       Toast.makeText(this,"아이디와 비밀번호를 확인해주세요.",Toast.LENGTH_SHORT).show()
-                   }
-               }
+        //Firebase Auth에 있는 signInWithEmailAndPassword를 이용하여 이메일과 비밀번호로 로그인을 하는 함수
+        mAuth.signInWithEmailAndPassword(email,password)
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    val currentUser = mAuth.currentUser
+                    if(currentUser!=null) {
+                        val intent = Intent(this, UserMainActivity::class.java)
+                        startActivity(intent)
+                    }
+                    else{
+                        Toast.makeText(this,"아이디와 비밀번호를 확인해주세요.",Toast.LENGTH_SHORT).show()
+                    }
+                }
+                else{
+                    Toast.makeText(this,"아이디와 비밀번호를 확인해주세요.",Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }

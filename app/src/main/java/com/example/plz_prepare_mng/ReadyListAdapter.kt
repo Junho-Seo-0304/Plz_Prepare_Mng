@@ -11,7 +11,7 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.ready_list.view.*
 
 class ReadyListAdapter(val context: Context, var ReadyList : ArrayList<CustomerList> ,val category: String) : BaseAdapter(){
-
+    // UserMainActivity에서 수락을 받은 주문들을 리스트뷰에 연결하는 어뎁터
     private lateinit var database: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
 
@@ -34,6 +34,7 @@ class ReadyListAdapter(val context: Context, var ReadyList : ArrayList<CustomerL
         view.Number.text=ReadyList[position].Cnumber.toString()
         view.OrderList.text=ReadyList[position].orderList
         view.FinishBtn.setOnClickListener {
+            // 완료된 주문을 삭제하는 버튼
             database.child("ReadyOrder").child(ReadyList[position].Cnumber.toString()).removeValue()
         }
         return view

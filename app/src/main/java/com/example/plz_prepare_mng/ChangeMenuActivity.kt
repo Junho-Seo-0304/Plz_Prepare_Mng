@@ -32,6 +32,7 @@ class ChangeMenuActivity : AppCompatActivity() {
         val finishBtn = findViewById<Button>(R.id.finishBtn)
 
         database.addValueEventListener(object:ValueEventListener{
+            // 현 메뉴 상황을 Firebase에서 가져온다
             override fun onCancelled(p0: DatabaseError) {
             }
 
@@ -54,6 +55,7 @@ class ChangeMenuActivity : AppCompatActivity() {
             }
         })
         addMenuBtn.setOnClickListener {
+            // 메뉴 추가 버튼
             val menuintent = Intent(this,ChangeMenu2Activity::class.java)
             menuintent.putExtra("User",user)
             menuintent.putExtra("Category",category)
@@ -61,6 +63,7 @@ class ChangeMenuActivity : AppCompatActivity() {
         }
 
         finishBtn.setOnClickListener {
+            // 메뉴 등록 완료 버튼
             Toast.makeText(baseContext,"메뉴가 수정되었습니다.",Toast.LENGTH_SHORT).show()
             finish()
         }

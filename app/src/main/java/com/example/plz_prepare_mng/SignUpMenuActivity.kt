@@ -31,13 +31,16 @@ class SignUpMenuActivity : AppCompatActivity() {
         val finishBtn = findViewById<Button>(R.id.finishBtn)
         val adapter = SignUpMenuAdapter(this,user,menuList)
         menuGrid.adapter = adapter
+
         addMenuBtn.setOnClickListener {
+            // 메뉴 추가 버튼
             val menuintent = Intent(this,SignUpMenu2Activity::class.java)
             menuintent.putExtra("User",user)
             startActivityForResult(menuintent,1)
         }
 
         finishBtn.setOnClickListener {
+            // 메뉴 등록 완료 버튼
             database.child("Users").child(category).child(user).child("MenuNum").setValue(menuList.size)
             database.child("Users").child(category).child(user).child("UsedNum").setValue(101)
             database.child("Users").child(category).child(user).child("Menu").setValue(menuList)

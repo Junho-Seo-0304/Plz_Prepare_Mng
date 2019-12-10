@@ -50,7 +50,7 @@ class UserMainActivity : AppCompatActivity() {
         }
     }
 
-    private fun searchCategory(){
+    private fun searchCategory(){ // 현재 유저의 레스토랑 카테고리가 무엇인지 찾아주는 함수
         database = FirebaseDatabase.getInstance().reference.child("Users")
         mAuth = FirebaseAuth.getInstance()
         database.addValueEventListener(object : ValueEventListener{
@@ -80,7 +80,7 @@ class UserMainActivity : AppCompatActivity() {
         })
     }
 
-    private fun getOrderList(Rname : TextView, PListView : ListView, RListView : ListView){
+    private fun getOrderList(Rname : TextView, PListView : ListView, RListView : ListView){ // 현재 주문 내역을 리스트뷰에 연결해주는 함수
         database.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -88,29 +88,21 @@ class UserMainActivity : AppCompatActivity() {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.child(category!!).hasChild(mAuth.currentUser!!.uid)) {
                     Rname.text =
-                        p0.child(category!!).child(mAuth.currentUser!!.uid).child("rname")
-                            .value.toString()
+                        p0.child(category!!).child(mAuth.currentUser!!.uid).child("rname").value.toString()
                     FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
                         val newToken = it.token
-                        database.child(category!!).child(mAuth.currentUser!!.uid)
-                            .child("PushKey").setValue(newToken)
+                        database.child(category!!).child(mAuth.currentUser!!.uid).child("PushKey").setValue(newToken)
                     }
                     PermissionList.clear()
                     ReadyList.clear()
                     for (i in 101..Integer.parseInt(
                         p0.child(category!!).child(mAuth.currentUser!!.uid).child("UsedNum").value.toString()
                     )) {
-                        if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").hasChild(
-                                i.toString()
-                            )
-                        ) {
+                        if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").hasChild(i.toString())) {
                             val num = i
                             var totalString = ""
-                            for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child(
-                                "PermissionOrder"
-                            ).child(i.toString()).childrenCount-1) {
-                                totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child(
-                                    "PermissionOrder"
+                            for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder").child(i.toString()).childrenCount-1) {
+                                totalString += p0.child(category!!).child(mAuth.currentUser!!.uid).child("PermissionOrder"
                                 ).child(i.toString()).child((j - 1).toString()).child("food").child(
                                     "fname"
                                 ).value.toString() + " : " + p0.child(category!!).child(mAuth.currentUser!!.uid).child(
@@ -120,17 +112,13 @@ class UserMainActivity : AppCompatActivity() {
                             PermissionList.add(CustomerList(num, totalString))
                         }
                     }
-                    PListView.adapter =
-                        PermissionListAdapter(baseContext, PermissionList, category!!)
+                    PListView.adapter = PermissionListAdapter(baseContext, PermissionList, category!!)
                     for (i in 101..Integer.parseInt(
                         p0.child(category!!).child(mAuth.currentUser!!.uid).child(
                             "UsedNum"
                         ).value.toString()
                     )) {
-                        if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").hasChild(
-                                i.toString()
-                            )
-                        ) {
+                        if (p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").hasChild(i.toString())) {
                             val num = i
                             var totalString = ""
                             for (j in 1 until p0.child(category!!).child(mAuth.currentUser!!.uid).child("ReadyOrder").child(i.toString()).childrenCount - 2) {
