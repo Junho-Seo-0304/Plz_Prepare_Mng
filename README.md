@@ -11,7 +11,7 @@
 * Minimum SDK version 18   
 * Language : Kotlin   
 * Glide : 이미지 처리   
-* Firebase Auth : 익명 로그인 관리   
+* Firebase Auth : 이메일 로그인 관리   
 * Firebase Storage : 저장된 이미지 관리   
 * Firebase database : Realtime DB 이용   
 * Google maps , location : 지도 관리   
